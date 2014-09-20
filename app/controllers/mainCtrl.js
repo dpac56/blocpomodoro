@@ -9,24 +9,30 @@
     $scope.mainSeconds = 0;
     $scope.mainMinutes = 0;
 
-    var secondsToMinutes = function(){
+    function Timer(seconds, minutes){
+      this.seconds = seconds;
+      this.minutes = minutes;
+    };
+
+    Timer.prototype.secondsToMinutes = function(){
+      if (this.seconds == 60){
+        this.seconds = 0;
+        this.minutes++;
+      }
+      this.seconds++;
+    };
+
+    /*var secondsToMinutes = function(){
           if ($scope.breakSeconds == 60){
             $scope.breakSeconds = 0;
             $scope.breakMinutes++
           }
           $scope.breakSeconds++;
-      };
-
-    /*var secondsToMinutes = function(seconds, minutes){
-          if (seconds == 60){
-            seconds = 0;
-            minutes++
-          }
-          seconds++;
       };*/
 
     $scope.startBreakTimer = function(){
-        breakTimer = $interval(secondsToMinutes, 1000, 300);
+        var newBreak = new Timer($scope.breakSeconds, $scope.breakMinutes);
+        breakTimer = $interval(newBreak.secondsToMinutes, 1000, 300);
       };
 
     $scope.stopBreakTimer = function(){
