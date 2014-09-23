@@ -2,6 +2,7 @@
   
   //controller starts
   var mainCtrl = function($scope, $interval){
+    var alertSound = new Audio('Buzz.mp3')
 
     $scope.breakSeconds = 0;
     $scope.breakMinutes = 0;
@@ -9,30 +10,22 @@
     $scope.mainSeconds = 0;
     $scope.mainMinutes = 0;
 
-    function Timer(seconds, minutes){
-      this.seconds = seconds;
-      this.minutes = minutes;
+    $scope.playAudio = function(){
+      alertSound.play();
     };
 
-    Timer.prototype.secondsToMinutes = function(){
-      if (this.seconds == 60){
-        this.seconds = 0;
-        this.minutes++;
-      }
-      this.seconds++;
-    };
-
-    /*var secondsToMinutes = function(){
-          if ($scope.breakSeconds == 60){
-            $scope.breakSeconds = 0;
-            $scope.breakMinutes++
+    var secondsToMinutes = function(seconds, minutes){
+          if ($scope[seconds] == 60){
+            $scope[seconds] = 0;
+            $scope[minutes]++;
+            //alertSound.play();
           }
-          $scope.breakSeconds++;
-      };*/
+          $scope[seconds]++;
+      };
 
+    var breakTimer = undefined;
     $scope.startBreakTimer = function(){
-        var newBreak = new Timer($scope.breakSeconds, $scope.breakMinutes);
-        breakTimer = $interval(newBreak.secondsToMinutes, 1000, 300);
+        breakTimer = $interval(function () { secondsToMinutes('breakSeconds', 'breakMinutes') }, 1000, 300);
       };
 
     $scope.stopBreakTimer = function(){
@@ -46,15 +39,9 @@
       };
 
 
-
+    var mainTimer = undefined;
     $scope.startMainTimer = function(){
-      mainTimer = $interval(function(){
-          if ($scope.mainSeconds == 60){
-            $scope.mainSeconds = 0;
-            $scope.mainMinutes++
-          }
-          $scope.mainSeconds++;
-        }, 1000, 1500);
+      mainTimer = $interval(function () { secondsToMinutes('mainSeconds', 'mainMinutes') }, 1000, 1500);
       };
 
     $scope.stopMainTimer = function(){
