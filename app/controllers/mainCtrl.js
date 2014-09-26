@@ -1,58 +1,31 @@
 (function(){
   
   //controller starts
-  var mainCtrl = function($scope, $interval, timerFactory){
-    
-    var count = 0;
+  var mainCtrl = function($scope, timerFactory){
 
-    $scope.breakSeconds = 0;
-    $scope.breakMinutes = 0;
-    $scope.breakCounter = 0;
+    $scope.$watch(function(){return timerFactory.breakSeconds}, function(){
+      $scope.breakSeconds = timerFactory.breakSeconds;
+      $scope.breakMinutes = timerFactory.breakMinutes;
+    });
 
-    $scope.mainSeconds = 0;
-    $scope.mainMinutes = 0;
-    $scope.mainCounter = 0;
-      
-    
-    var breakTimer = undefined;
-    $scope.startBreakTimer = function(){
-        breakTimer = $interval(function () { 
-          timerFactory.secondsToMinutes($scope, 'breakSeconds', 'breakMinutes', 'breakCounter', 5) }, 100, 300);
-      };
+    $scope.$watch(function(){return timerFactory.mainSeconds}, function(){
+      $scope.mainSeconds = timerFactory.mainSeconds;
+      $scope.mainMinutes = timerFactory.mainMinutes;
+    });
 
 
-    //$scope.startBreakTimer = timerFactory.startBreakTimer($scope, 'breakSeconds', 'breakMinutes', 'breakCounter');
+    $scope.startBreakTimer = function(){return timerFactory.startBreakTimer();};
+    $scope.stopBreakTimer = function(){return timerFactory.stopBreakTimer();};
+    $scope.resetBreakTimer = function(){return timerFactory.resetBreakTimer();};
 
-    $scope.stopBreakTimer = function(){
-        $interval.cancel(breakTimer);
-      };
+    $scope.startMainTimer = function(){return timerFactory.startMainTimer();};
+    $scope.stopMainTimer = function(){return timerFactory.stopMainTimer();};
+    $scope.resetMainTimer = function(){return timerFactory.resetMainTimer();};
 
-    $scope.resetBreakTimer = function(){
-        $interval.cancel(breakTimer);
-        $scope.breakSeconds = 0;
-        $scope.breakMinutes = 0;
-      };
-
-
-    var mainTimer = undefined;
-    $scope.startMainTimer = function(){
-      mainTimer = $interval(function () { 
-        timerFactory.secondsToMinutes($scope, 'mainSeconds', 'mainMinutes', 'mainCounter', 25) }, 100, 1500);
-      };
-
-    $scope.stopMainTimer = function(){
-        $interval.cancel(mainTimer);
-      };
-
-    $scope.resetMainTimer = function(){
-        $interval.cancel(mainTimer);
-        $scope.mainSeconds = 0;
-        $scope.mainMinutes = 0;
-      };
 
     };
 
-  mainCtrl.$inject = ['$scope', '$interval', 'timerFactory'];
+  mainCtrl.$inject = ['$scope', 'timerFactory'];
 
   angular.module('pomodoroApp')
     .controller('mainCtrl', mainCtrl);
